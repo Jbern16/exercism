@@ -11,17 +11,18 @@ Elm.SpaceAge.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var conversion = F2(function (seconds,factor) {    return seconds / factor / 31557600;});
    var ageOn = F2(function (planet,seconds) {
       var _p0 = planet;
       switch (_p0.ctor)
       {case "Earth": return seconds / 31557600;
-         case "Mercury": return seconds / 0.2408467 / 31557600;
-         case "Venus": return seconds / 0.61519726 / 31557600;
-         case "Mars": return seconds / 1.8808158 / 31557600;
-         case "Jupiter": return seconds / 11.862615 / 31557600;
-         case "Saturn": return seconds / 29.447498 / 31557600;
-         case "Uranus": return seconds / 84.016846 / 31557600;
-         default: return seconds / 164.79132 / 31557600;}
+         case "Mercury": return A2(conversion,seconds,0.2408467);
+         case "Venus": return A2(conversion,seconds,0.61519726);
+         case "Mars": return A2(conversion,seconds,1.8808158);
+         case "Jupiter": return A2(conversion,seconds,11.862615);
+         case "Saturn": return A2(conversion,seconds,29.447498);
+         case "Uranus": return A2(conversion,seconds,84.016846);
+         default: return A2(conversion,seconds,164.79132);}
    });
    var Neptune = {ctor: "Neptune"};
    var Uranus = {ctor: "Uranus"};
@@ -40,5 +41,6 @@ Elm.SpaceAge.make = function (_elm) {
                                  ,Saturn: Saturn
                                  ,Uranus: Uranus
                                  ,Neptune: Neptune
+                                 ,conversion: conversion
                                  ,ageOn: ageOn};
 };

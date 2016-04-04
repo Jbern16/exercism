@@ -10,22 +10,27 @@ type Planet
   | Uranus
   | Neptune
 
+conversion : Float -> Float -> Float
+conversion seconds factor =
+    (seconds / factor) / 31557600
 
+
+ageOn : Planet -> Float -> Float
 ageOn planet seconds =
     case planet of
       Earth ->
-        seconds / (31557600)
+        seconds / 31557600
       Mercury ->
-        (seconds / 0.2408467) / 31557600
+        conversion seconds 0.2408467
       Venus ->
-        (seconds / 0.61519726) / 31557600
+        conversion seconds 0.61519726
       Mars ->
-        (seconds / 1.8808158) / 31557600
+        conversion seconds 1.8808158
       Jupiter ->
-        (seconds / 11.862615) / 31557600
+        conversion seconds 11.862615
       Saturn ->
-        (seconds / 29.447498) / 31557600
+        conversion seconds 29.447498
       Uranus ->
-        (seconds / 84.016846) / 31557600
+        conversion seconds 84.016846
       Neptune ->
-        (seconds / 164.79132) / 31557600
+        conversion seconds 164.79132
