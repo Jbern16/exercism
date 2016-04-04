@@ -1,0 +1,47 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console = Elm.Console.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $ElmTest = Elm.ElmTest.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Strain = Elm.Strain.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var lessThanTen = function (num) {    return _U.cmp(num,10) < 0;};
+   var isFirstLetter = F2(function (letter,word) {    return _U.eq(A2($String.left,1,word),letter);});
+   var odd = function (number) {    return _U.eq(A2($Basics._op["%"],number,2),1);};
+   var even = function (number) {    return _U.eq(A2($Basics._op["%"],number,2),0);};
+   var tests = A2($ElmTest.suite,
+   "Strain",
+   _U.list([A2($ElmTest.test,"empty keep",A2($ElmTest.assertEqual,_U.list([]),A2($Strain.keep,lessThanTen,_U.list([]))))
+           ,A2($ElmTest.test,"keep everything",A2($ElmTest.assertEqual,_U.list([1,2,3]),A2($Strain.keep,lessThanTen,_U.list([1,2,3]))))
+           ,A2($ElmTest.test,"keep first and last",A2($ElmTest.assertEqual,_U.list([1,3]),A2($Strain.keep,odd,_U.list([1,2,3]))))
+           ,A2($ElmTest.test,"keep nothing",A2($ElmTest.assertEqual,_U.list([]),A2($Strain.keep,even,_U.list([1,3,5,7]))))
+           ,A2($ElmTest.test,"keep neither first nor last",A2($ElmTest.assertEqual,_U.list([2]),A2($Strain.keep,even,_U.list([1,2,3]))))
+           ,A2($ElmTest.test,
+           "keep strings",
+           A2($ElmTest.assertEqual,
+           _U.list(["zebra","zombies","zealot"]),
+           A2($Strain.keep,isFirstLetter("z"),_U.list(["apple","zebra","banana","zombies","cherimoya","zealot"]))))
+           ,A2($ElmTest.test,"empty discard",A2($ElmTest.assertEqual,_U.list([]),A2($Strain.discard,lessThanTen,_U.list([]))))
+           ,A2($ElmTest.test,"discard everything",A2($ElmTest.assertEqual,_U.list([]),A2($Strain.discard,lessThanTen,_U.list([1,2,3]))))
+           ,A2($ElmTest.test,"discard first and last",A2($ElmTest.assertEqual,_U.list([2]),A2($Strain.discard,odd,_U.list([1,2,3]))))
+           ,A2($ElmTest.test,"discard nothing",A2($ElmTest.assertEqual,_U.list([1,3,5,7]),A2($Strain.discard,even,_U.list([1,3,5,7]))))
+           ,A2($ElmTest.test,"discard neither first nor last",A2($ElmTest.assertEqual,_U.list([1,3]),A2($Strain.discard,even,_U.list([1,2,3]))))
+           ,A2($ElmTest.test,
+           "discard strings",
+           A2($ElmTest.assertEqual,
+           _U.list(["apple","banana","cherimoya"]),
+           A2($Strain.discard,isFirstLetter("z"),_U.list(["apple","zebra","banana","zombies","cherimoya","zealot"]))))]));
+   var runner = Elm.Native.Task.make(_elm).performSignal("runner",$Console.run($ElmTest.consoleRunner(tests)));
+   return _elm.Main.values = {_op: _op,even: even,odd: odd,isFirstLetter: isFirstLetter,lessThanTen: lessThanTen,tests: tests};
+};

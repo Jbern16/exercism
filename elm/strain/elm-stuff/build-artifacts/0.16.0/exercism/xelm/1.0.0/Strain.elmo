@@ -1,0 +1,49 @@
+Elm.Strain = Elm.Strain || {};
+Elm.Strain.make = function (_elm) {
+   "use strict";
+   _elm.Strain = _elm.Strain || {};
+   if (_elm.Strain.values) return _elm.Strain.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var discard = F2(function (func,list) {
+      discard: while (true) {
+         var _p0 = list;
+         if (_p0.ctor === "[]") {
+               return _U.list([]);
+            } else {
+               var _p2 = _p0._1;
+               var _p1 = _p0._0;
+               if (func(_p1)) {
+                     var _v1 = func,_v2 = _p2;
+                     func = _v1;
+                     list = _v2;
+                     continue discard;
+                  } else return A2($List._op["::"],_p1,A2(discard,func,_p2));
+            }
+      }
+   });
+   var keep = F2(function (func,list) {
+      keep: while (true) {
+         var _p3 = list;
+         if (_p3.ctor === "[]") {
+               return _U.list([]);
+            } else {
+               var _p5 = _p3._1;
+               var _p4 = _p3._0;
+               if (func(_p4)) return A2($List._op["::"],_p4,A2(keep,func,_p5)); else {
+                     var _v4 = func,_v5 = _p5;
+                     func = _v4;
+                     list = _v5;
+                     continue keep;
+                  }
+            }
+      }
+   });
+   return _elm.Strain.values = {_op: _op,keep: keep,discard: discard};
+};
