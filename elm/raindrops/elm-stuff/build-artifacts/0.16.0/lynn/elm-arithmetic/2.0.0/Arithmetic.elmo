@@ -1,0 +1,286 @@
+Elm.Arithmetic = Elm.Arithmetic || {};
+Elm.Arithmetic.make = function (_elm) {
+   "use strict";
+   _elm.Arithmetic = _elm.Arithmetic || {};
+   if (_elm.Arithmetic.values) return _elm.Arithmetic.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var primeFactors = function (n) {
+      var go = F3(function (p,n,factors) {
+         go: while (true) if (_U.cmp(p * p,n) > 0) return A2($Basics._op["++"],$List.reverse(factors),_U.list([n])); else if (_U.eq(A2($Basics._op["%"],n,p),0))
+            {
+                  var _v0 = p,_v1 = n / p | 0,_v2 = A2($List._op["::"],p,factors);
+                  p = _v0;
+                  n = _v1;
+                  factors = _v2;
+                  continue go;
+               } else {
+                  var _v3 = p + 1 + A2($Basics._op["%"],p,2),_v4 = n,_v5 = factors;
+                  p = _v3;
+                  n = _v4;
+                  factors = _v5;
+                  continue go;
+               }
+      });
+      return _U.cmp(n,1) < 1 ? _U.list([]) : A3(go,2,n,_U.list([]));
+   };
+   var primeExponents = function () {
+      var runLengthCons = F2(function (x,acc) {
+         var _p0 = acc;
+         if (_p0.ctor === "[]") {
+               return _U.list([{ctor: "_Tuple2",_0: x,_1: 1}]);
+            } else {
+               var _p3 = _p0._0._0;
+               var _p2 = _p0._1;
+               var _p1 = _p0._0._1;
+               return _U.eq(x,_p3) ? A2($List._op["::"],{ctor: "_Tuple2",_0: _p3,_1: _p1 + 1},_p2) : A2($List._op["::"],
+               {ctor: "_Tuple2",_0: x,_1: 1},
+               A2($List._op["::"],{ctor: "_Tuple2",_0: _p3,_1: _p1},_p2));
+            }
+      });
+      return function (_p4) {
+         return A3($List.foldr,runLengthCons,_U.list([]),primeFactors(_p4));
+      };
+   }();
+   var shiftToOdd = function (n) {
+      var f = F2(function (k,m) {
+         f: while (true) if (_U.eq(A2($Basics._op["%"],m,2),1)) return {ctor: "_Tuple2",_0: k,_1: m}; else {
+               var _v7 = k + 1,_v8 = m / 2 | 0;
+               k = _v7;
+               m = _v8;
+               continue f;
+            }
+      });
+      return A2(f,0,n);
+   };
+   var extendedGcd = F2(function (a,b) {
+      var egcd = F6(function (n1,o1,n2,o2,r,s) {
+         egcd: while (true) if (_U.eq(s,0)) return {ctor: "_Tuple3",_0: r,_1: o1,_2: o2}; else {
+               var q = r / s | 0;
+               var _v9 = o1 - q * n1,_v10 = n1,_v11 = o2 - q * n2,_v12 = n2,_v13 = s,_v14 = A2($Basics.rem,r,s);
+               n1 = _v9;
+               o1 = _v10;
+               n2 = _v11;
+               o2 = _v12;
+               r = _v13;
+               s = _v14;
+               continue egcd;
+            }
+      });
+      var _p5 = A6(egcd,0,1,1,0,$Basics.abs(a),$Basics.abs(b));
+      var d = _p5._0;
+      var x = _p5._1;
+      var y = _p5._2;
+      var u = _U.cmp(a,0) < 0 ? $Basics.negate(x) : x;
+      var v = _U.cmp(b,0) < 0 ? $Basics.negate(y) : y;
+      return {ctor: "_Tuple3",_0: d,_1: u,_2: v};
+   });
+   var modularInverse = F2(function (a,modulus) {
+      var _p6 = A2(extendedGcd,a,modulus);
+      var d = _p6._0;
+      var x = _p6._1;
+      return _U.eq(d,1) ? $Maybe.Just(A2($Basics._op["%"],x,modulus)) : $Maybe.Nothing;
+   });
+   var chineseRemainder = function (equations) {
+      var fromJustCons = F2(function (x,acc) {
+         var _p7 = x;
+         if (_p7.ctor === "Just") {
+               return A2($Maybe.map,F2(function (x,y) {    return A2($List._op["::"],x,y);})(_p7._0),acc);
+            } else {
+               return $Maybe.Nothing;
+            }
+      });
+      var fromJustList = A2($List.foldr,fromJustCons,$Maybe.Just(_U.list([])));
+      var _p8 = $List.unzip(equations);
+      var residues = _p8._0;
+      var moduli = _p8._1;
+      var m = $List.product(moduli);
+      var v = A2($List.map,function (x) {    return m / x | 0;},moduli);
+      var inverses = fromJustList(A3($List.map2,modularInverse,v,moduli));
+      return A2($Maybe.map,
+      function (_p9) {
+         return A3($Basics.flip,
+         F2(function (x,y) {    return A2($Basics._op["%"],x,y);}),
+         m,
+         $List.sum(A3($List.map2,F2(function (x,y) {    return x * y;}),v,A3($List.map2,F2(function (x,y) {    return x * y;}),residues,_p9))));
+      },
+      fromJustList(A3($List.map2,modularInverse,v,moduli)));
+   };
+   var totient = function (n) {
+      var f = F2(function (p,n) {    return n * (p - 1) / p | 0;});
+      var n$ = $Basics.abs(n);
+      return A3($List.foldr,f,n$,A2($List.map,$Basics.fst,primeExponents(n$)));
+   };
+   var gcd = F2(function (a,b) {
+      var gcd$ = F2(function (a,b) {
+         gcd$: while (true) if (_U.eq(b,0)) return a; else {
+               var _v16 = b,_v17 = A2($Basics._op["%"],a,b);
+               a = _v16;
+               b = _v17;
+               continue gcd$;
+            }
+      });
+      return A2(gcd$,$Basics.abs(a),$Basics.abs(b));
+   });
+   var lcm = F2(function (a,b) {    return $Basics.abs((a / A2(gcd,a,b) | 0) * b);});
+   var isCoprimeTo = F2(function (a,b) {    return _U.eq(A2(gcd,a,b),1);});
+   var divisorCount = function (_p10) {    return $List.product(A2($List.map,function (_p11) {    var _p12 = _p11;return _p12._1 + 1;},primeExponents(_p10)));};
+   var divisors = function () {
+      var f = function (_p13) {
+         var _p14 = _p13;
+         return $List.concatMap(function (a) {    return A2($List.map,function (x) {    return Math.pow(_p14._0,x) * a;},_U.range(0,_p14._1));});
+      };
+      return function (_p15) {
+         return $List.sort(A3($List.foldr,f,_U.list([1]),primeExponents(_p15)));
+      };
+   }();
+   var properDivisors = function (n) {    return A2($List.filter,F2(function (x,y) {    return !_U.eq(x,y);})(n),divisors(n));};
+   var isMultipleOf = F2(function (a,b) {    return _U.eq(A2($Basics._op["%"],a,b),0);});
+   var divides = F2(function (a,b) {    return _U.eq(A2($Basics._op["%"],b,a),0);});
+   var cubeRoot = function (n) {    return Math.pow(n,1 / 3);};
+   var intCubeRoot = function (_p16) {    return $Basics.round(cubeRoot($Basics.toFloat(_p16)));};
+   var exactIntCubeRoot = function (n) {    var s = intCubeRoot(n);return _U.eq(Math.pow(s,3),n) ? $Maybe.Just(s) : $Maybe.Nothing;};
+   var isCube = function (n) {
+      var r = A2($Basics._op["%"],n,63);
+      return (_U.eq(r,0) || (_U.eq(r,1) || (_U.eq(r,8) || (_U.eq(r,27) || (_U.eq(r,28) || (_U.eq(r,35) || (_U.eq(r,36) || (_U.eq(r,55) || _U.eq(r,
+      62))))))))) && _U.eq(Math.pow(intCubeRoot(n),3),n);
+   };
+   var intSquareRoot = function (_p17) {    return $Basics.round($Basics.sqrt($Basics.toFloat(_p17)));};
+   var exactIntSquareRoot = function (n) {    var s = intSquareRoot(n);return _U.eq(s * s,n) ? $Maybe.Just(s) : $Maybe.Nothing;};
+   var isSquare = function (n) {
+      var r = A2($Basics._op["%"],n,48);
+      return (_U.eq(r,0) || (_U.eq(r,1) || (_U.eq(r,4) || (_U.eq(r,9) || (_U.eq(r,16) || (_U.eq(r,25) || (_U.eq(r,33) || _U.eq(r,
+      36)))))))) && _U.eq(Math.pow(intSquareRoot(n),2),n);
+   };
+   var primesBelow = function (n) {
+      var trueIndices = function () {
+         var g = F2(function (x,acc) {    var _p18 = x;if (_p18.ctor === "Just") {    return A2($List._op["::"],_p18._0,acc);} else {    return acc;}});
+         var f = F2(function (i,pred) {    return pred ? $Maybe.Just(i) : $Maybe.Nothing;});
+         return function (_p19) {
+            return A3($Array.foldr,g,_U.list([]),A2($Array.indexedMap,f,_p19));
+         };
+      }();
+      var sieve = F2(function (p,arr) {
+         var mark = F4(function (i,p,n,arr) {
+            mark: while (true) if (_U.cmp(i * p,n) > -1) return arr; else {
+                  var _v21 = i + 1,_v22 = p,_v23 = n,_v24 = A3($Array.set,i * p,false,arr);
+                  i = _v21;
+                  p = _v22;
+                  n = _v23;
+                  arr = _v24;
+                  continue mark;
+               }
+         });
+         return _U.eq(A2($Array.get,p,arr),$Maybe.Just(true)) ? A4(mark,2,p,n,arr) : arr;
+      });
+      var initial = A3($Array.set,1,false,A3($Array.set,0,false,A2($Array.repeat,n,true)));
+      var ps = A2($List._op["::"],2,A2($List.map,function (x) {    return 2 * x + 1;},_U.range(1,intSquareRoot(n) / 2 | 0)));
+      return trueIndices(A3($List.foldr,sieve,initial,ps));
+   };
+   var safeSquareRoot = function (n) {    return _U.cmp(n,0) < 0 ? $Maybe.Nothing : $Maybe.Just($Basics.sqrt(n));};
+   var squareRoot = $Basics.sqrt;
+   var fromBase = function (base) {    return A2($List.foldl,F2(function (x,acc) {    return acc * base + x;}),0);};
+   var toBase = F2(function (base,n) {
+      var go = F2(function (x,acc) {
+         go: while (true) if (_U.cmp(x,0) < 1) return acc; else {
+               var _v25 = x / base | 0,_v26 = A2($List._op["::"],A2($Basics._op["%"],x,base),acc);
+               x = _v25;
+               acc = _v26;
+               continue go;
+            }
+      });
+      var n$ = $Basics.abs(n);
+      return A2(go,n$,_U.list([]));
+   });
+   var isOdd = function (n) {    return !_U.eq(A2($Basics._op["%"],n,2),0);};
+   var powerMod = F3(function (base,exponent,modulus) {
+      var go = F3(function (b,e,r) {
+         go: while (true) if (_U.eq(e,0)) return r; else {
+               var r$ = isOdd(e) ? A2($Basics._op["%"],r * b,modulus) : r;
+               var _v27 = A2($Basics._op["%"],b * b,modulus),_v28 = e / 2 | 0,_v29 = r$;
+               b = _v27;
+               e = _v28;
+               r = _v29;
+               continue go;
+            }
+      });
+      return _U.eq(modulus,1) ? 0 : A3(go,A2($Basics._op["%"],base,modulus),exponent,1);
+   });
+   var millerRabin = F2(function (n,witnesses) {
+      var check = F2(function (l,x) {
+         if (_U.cmp(l,0) < 1) return true; else {
+               var y = A3(powerMod,x,2,n);
+               return _U.eq(y,1) || !_U.eq(y,n - 1) && A2(check,l - 1,y);
+            }
+      });
+      var _p20 = shiftToOdd(n - 1);
+      var s = _p20._0;
+      var d = _p20._1;
+      var go = function (witnesses) {
+         go: while (true) {
+            var _p21 = witnesses;
+            if (_p21.ctor === "[]") {
+                  return true;
+               } else {
+                  var _p22 = _p21._1;
+                  var x = A3(powerMod,_p21._0,d,n);
+                  if (_U.eq(x,1) || _U.eq(x,n - 1)) {
+                        var _v31 = _p22;
+                        witnesses = _v31;
+                        continue go;
+                     } else if (A2(check,s - 1,x)) return false; else {
+                           var _v32 = _p22;
+                           witnesses = _v32;
+                           continue go;
+                        }
+               }
+         }
+      };
+      return go(witnesses);
+   });
+   var isPrime = function (n) {
+      return _U.cmp(n,13) < 0 ? _U.eq(n,2) || (_U.eq(n,3) || (_U.eq(n,5) || (_U.eq(n,7) || _U.eq(n,11)))) : _U.eq(A2($Basics._op["%"],n,2),
+      0) || (_U.eq(A2($Basics._op["%"],n,3),0) || _U.eq(A2($Basics._op["%"],n,5),0)) ? false : _U.cmp(n,1373653) < 0 ? A2(millerRabin,
+      n,
+      _U.list([2,3])) : A2(millerRabin,n,_U.list([2,3,5,7,11]));
+   };
+   var isEven = function (n) {    return _U.eq(A2($Basics._op["%"],n,2),0);};
+   return _elm.Arithmetic.values = {_op: _op
+                                   ,isEven: isEven
+                                   ,isOdd: isOdd
+                                   ,toBase: toBase
+                                   ,fromBase: fromBase
+                                   ,squareRoot: squareRoot
+                                   ,safeSquareRoot: safeSquareRoot
+                                   ,intSquareRoot: intSquareRoot
+                                   ,exactIntSquareRoot: exactIntSquareRoot
+                                   ,isSquare: isSquare
+                                   ,cubeRoot: cubeRoot
+                                   ,intCubeRoot: intCubeRoot
+                                   ,exactIntCubeRoot: exactIntCubeRoot
+                                   ,isCube: isCube
+                                   ,divides: divides
+                                   ,isMultipleOf: isMultipleOf
+                                   ,divisors: divisors
+                                   ,properDivisors: properDivisors
+                                   ,divisorCount: divisorCount
+                                   ,gcd: gcd
+                                   ,lcm: lcm
+                                   ,isCoprimeTo: isCoprimeTo
+                                   ,totient: totient
+                                   ,extendedGcd: extendedGcd
+                                   ,powerMod: powerMod
+                                   ,modularInverse: modularInverse
+                                   ,chineseRemainder: chineseRemainder
+                                   ,isPrime: isPrime
+                                   ,primesBelow: primesBelow
+                                   ,primeFactors: primeFactors
+                                   ,primeExponents: primeExponents};
+};

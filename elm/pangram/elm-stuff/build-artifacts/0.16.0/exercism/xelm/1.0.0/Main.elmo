@@ -1,0 +1,33 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console = Elm.Console.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $ElmTest = Elm.ElmTest.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Pangram = Elm.Pangram.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var tests = A2($ElmTest.suite,
+   "Pangram",
+   _U.list([A2($ElmTest.test,"sentence empty",A2($ElmTest.assertEqual,false,$Pangram.isPangram("")))
+           ,A2($ElmTest.test,"pangram with only lower case",A2($ElmTest.assertEqual,true,$Pangram.isPangram("the quick brown fox jumps over the lazy dog")))
+           ,A2($ElmTest.test,
+           "missing character \'x\'",
+           A2($ElmTest.assertEqual,false,$Pangram.isPangram("a quick movement of the enemy will jeopardize five gunboats")))
+           ,A2($ElmTest.test,
+           "pangram with mixed case and punctuation",
+           A2($ElmTest.assertEqual,true,$Pangram.isPangram("\"Five quacking Zephyrs jolt my wax bed.\"")))
+           ,A2($ElmTest.test,
+           "pangram with non ascii characters",
+           A2($ElmTest.assertEqual,true,$Pangram.isPangram("Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.")))]));
+   var runner = Elm.Native.Task.make(_elm).performSignal("runner",$Console.run($ElmTest.consoleRunner(tests)));
+   return _elm.Main.values = {_op: _op,tests: tests};
+};

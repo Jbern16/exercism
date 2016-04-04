@@ -1,0 +1,30 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console = Elm.Console.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $ElmTest = Elm.ElmTest.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $SpaceAge = Elm.SpaceAge.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var tests = A2($ElmTest.suite,
+   "SpaceAge",
+   _U.list([A2($ElmTest.test,"age in earth years",A2($ElmTest.assertEqual,32,$Basics.round(A2($SpaceAge.ageOn,$SpaceAge.Earth,1000000000))))
+           ,A2($ElmTest.test,"age in mercury years",A2($ElmTest.assertEqual,281,$Basics.round(A2($SpaceAge.ageOn,$SpaceAge.Mercury,2134835688))))
+           ,A2($ElmTest.test,"age in venus years",A2($ElmTest.assertEqual,10,$Basics.round(A2($SpaceAge.ageOn,$SpaceAge.Venus,189839836))))
+           ,A2($ElmTest.test,"age on mars",A2($ElmTest.assertEqual,39,$Basics.round(A2($SpaceAge.ageOn,$SpaceAge.Mars,2329871239))))
+           ,A2($ElmTest.test,"age on jupiter",A2($ElmTest.assertEqual,2,$Basics.round(A2($SpaceAge.ageOn,$SpaceAge.Jupiter,901876382))))
+           ,A2($ElmTest.test,"age on saturn",A2($ElmTest.assertEqual,3,$Basics.round(A2($SpaceAge.ageOn,$SpaceAge.Saturn,3000000000))))
+           ,A2($ElmTest.test,"age on uranus",A2($ElmTest.assertEqual,1,$Basics.round(A2($SpaceAge.ageOn,$SpaceAge.Uranus,3210123456))))
+           ,A2($ElmTest.test,"age on neptune",A2($ElmTest.assertEqual,2,$Basics.round(A2($SpaceAge.ageOn,$SpaceAge.Neptune,8210123456))))]));
+   var runner = Elm.Native.Task.make(_elm).performSignal("runner",$Console.run($ElmTest.consoleRunner(tests)));
+   return _elm.Main.values = {_op: _op,tests: tests};
+};

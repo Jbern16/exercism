@@ -1,0 +1,23 @@
+Elm.Pangram = Elm.Pangram || {};
+Elm.Pangram.make = function (_elm) {
+   "use strict";
+   _elm.Pangram = _elm.Pangram || {};
+   if (_elm.Pangram.values) return _elm.Pangram.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Set = Elm.Set.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm);
+   var _op = {};
+   var convertToSet = function (phrase) {    return $Set.fromList($String.toList($String.toLower(phrase)));};
+   var alphabet = $Set.fromList($String.toList("abcdefghijklmnopqrstuvwxyz"));
+   var isPangram = function (phrase) {
+      var phraseLetters = convertToSet(phrase);
+      return _U.eq(A2($Set.diff,alphabet,phraseLetters),$Set.fromList(_U.list([])));
+   };
+   return _elm.Pangram.values = {_op: _op,alphabet: alphabet,convertToSet: convertToSet,isPangram: isPangram};
+};

@@ -1,0 +1,64 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Anagram = Elm.Anagram.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console = Elm.Console.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $ElmTest = Elm.ElmTest.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var tests = A2($ElmTest.suite,
+   "Anagram",
+   _U.list([A2($ElmTest.test,"no matches",A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"diaper",_U.list(["hello","world","zombies","pants"]))))
+           ,A2($ElmTest.test,"detects simple anagram",A2($ElmTest.assertEqual,_U.list(["tan"]),A2($Anagram.detect,"ant",_U.list(["tan","stand","at"]))))
+           ,A2($ElmTest.test,"does not detect false positives",A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"galea",_U.list(["eagle"]))))
+           ,A2($ElmTest.test,
+           "detects multiple anagrams",
+           A2($ElmTest.assertEqual,_U.list(["stream","maters"]),A2($Anagram.detect,"master",_U.list(["stream","pigeon","maters"]))))
+           ,A2($ElmTest.test,"does not detect anagram subsets",A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"good",_U.list(["dog","goody"]))))
+           ,A2($ElmTest.test,
+           "detects anagram",
+           A2($ElmTest.assertEqual,_U.list(["inlets"]),A2($Anagram.detect,"listen",_U.list(["enlists","google","inlets","banana"]))))
+           ,A2($ElmTest.test,
+           "detects multiple anagrams",
+           A2($ElmTest.assertEqual,
+           _U.list(["gallery","regally","largely"]),
+           A2($Anagram.detect,"allergy",_U.list(["gallery","ballerina","regally","clergy","largely","leading"]))))
+           ,A2($ElmTest.test,
+           "does not detect indentical words",
+           A2($ElmTest.assertEqual,_U.list(["cron"]),A2($Anagram.detect,"corn",_U.list(["corn","dark","Corn","rank","CORN","cron","park"]))))
+           ,A2($ElmTest.test,
+           "does not detect non-anagrams with identical checksum",
+           A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"mass",_U.list(["last"]))))
+           ,A2($ElmTest.test,
+           "detects anagrams case-insensitively",
+           A2($ElmTest.assertEqual,_U.list(["Carthorse"]),A2($Anagram.detect,"Orchestra",_U.list(["cashregister","Carthorse","radishes"]))))
+           ,A2($ElmTest.test,
+           "detects anagrams using case-insensitive subject",
+           A2($ElmTest.assertEqual,_U.list(["carthorse"]),A2($Anagram.detect,"Orchestra",_U.list(["cashregister","carthorse","radishes"]))))
+           ,A2($ElmTest.test,
+           "detects anagrams using case-insensitve possible matches",
+           A2($ElmTest.assertEqual,_U.list(["Carthorse"]),A2($Anagram.detect,"orchestra",_U.list(["cashregister","Carthorse","radishes"]))))
+           ,A2($ElmTest.test,"does not detect a word as its own anagram",A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"banana",_U.list(["Banana"]))))
+           ,A2($ElmTest.test,
+           "does not detect a anagram if the original word is repeated",
+           A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"go",_U.list(["go Go GO"]))))
+           ,A2($ElmTest.test,"anagrams must use all letters exactly once",A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"tapper",_U.list(["patter"]))))
+           ,A2($ElmTest.test,"eliminates anagrams with the same checksum",A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"mass",_U.list(["last"]))))
+           ,A2($ElmTest.test,"detects unicode anagrams",A2($ElmTest.assertEqual,_U.list(["ΒΓΑ","γβα"]),A2($Anagram.detect,"ΑΒΓ",_U.list(["ΒΓΑ","ΒΓΔ","γβα"]))))
+           ,A2($ElmTest.test,"eliminates misleading unicode anagrams",A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"ΑΒΓ",_U.list(["ABΓ"]))))
+           ,A2($ElmTest.test,"capital word is not own anagram",A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"BANANA",_U.list(["Banana"]))))
+           ,A2($ElmTest.test,
+           "anagrams must use all letters exactly once",
+           A2($ElmTest.assertEqual,_U.list([]),A2($Anagram.detect,"patter",_U.list(["tapper"]))))]));
+   var runner = Elm.Native.Task.make(_elm).performSignal("runner",$Console.run($ElmTest.consoleRunner(tests)));
+   return _elm.Main.values = {_op: _op,tests: tests};
+};

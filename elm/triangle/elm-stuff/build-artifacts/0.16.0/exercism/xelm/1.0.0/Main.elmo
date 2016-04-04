@@ -1,0 +1,55 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console = Elm.Console.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $ElmTest = Elm.ElmTest.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Triangle = Elm.Triangle.make(_elm);
+   var _op = {};
+   var tests = A2($ElmTest.suite,
+   "triangleKind",
+   _U.list([A2($ElmTest.test,"equilateral triangles have equal sides",A2($ElmTest.assertEqual,$Result.Ok("equilateral"),A3($Triangle.triangleKind,2,2,2)))
+           ,A2($ElmTest.test,
+           "larger equilateral triangles also have equal sides",
+           A2($ElmTest.assertEqual,$Result.Ok("equilateral"),A3($Triangle.triangleKind,10,10,10)))
+           ,A2($ElmTest.test,"isosceles triangles have last two sides equal",A2($ElmTest.assertEqual,$Result.Ok("isosceles"),A3($Triangle.triangleKind,3,4,4)))
+           ,A2($ElmTest.test,
+           "isosceles triangles have first and last sides equal",
+           A2($ElmTest.assertEqual,$Result.Ok("isosceles"),A3($Triangle.triangleKind,4,3,4)))
+           ,A2($ElmTest.test,"isosceles triangles have two first sides equal",A2($ElmTest.assertEqual,$Result.Ok("isosceles"),A3($Triangle.triangleKind,4,4,3)))
+           ,A2($ElmTest.test,
+           "isosceles triangles have in fact exactly two sides equal",
+           A2($ElmTest.assertEqual,$Result.Ok("isosceles"),A3($Triangle.triangleKind,10,10,2)))
+           ,A2($ElmTest.test,"scalene triangles have no equal sides",A2($ElmTest.assertEqual,$Result.Ok("scalene"),A3($Triangle.triangleKind,3,4,5)))
+           ,A2($ElmTest.test,
+           "scalene triangles have no equal sides at a larger scale too",
+           A2($ElmTest.assertEqual,$Result.Ok("scalene"),A3($Triangle.triangleKind,10,11,12)))
+           ,A2($ElmTest.test,
+           "scalene triangles have no equal sides at a larger scale too 2",
+           A2($ElmTest.assertEqual,$Result.Ok("scalene"),A3($Triangle.triangleKind,5,4,2)))
+           ,A2($ElmTest.test,"very small triangles are legal",A2($ElmTest.assertEqual,$Result.Ok("scalene"),A3($Triangle.triangleKind,0.4,0.6,0.3)))
+           ,A2($ElmTest.test,"triangles with no size are illegal",A2($ElmTest.assertEqual,$Result.Err("Invalid lengths"),A3($Triangle.triangleKind,0,0,0)))
+           ,A2($ElmTest.test,
+           "triangles with negative sides are illegal",
+           A2($ElmTest.assertEqual,$Result.Err("Invalid lengths"),A3($Triangle.triangleKind,3,4,-5)))
+           ,A2($ElmTest.test,
+           "triangles violating triangle inequality are illegal 1",
+           A2($ElmTest.assertEqual,$Result.Err("Violates inequality"),A3($Triangle.triangleKind,1,1,3)))
+           ,A2($ElmTest.test,
+           "triangles violating triangle inequality are illegal 2",
+           A2($ElmTest.assertEqual,$Result.Err("Violates inequality"),A3($Triangle.triangleKind,2,4,2)))
+           ,A2($ElmTest.test,
+           "triangles violating triangle inequality are illegal 3",
+           A2($ElmTest.assertEqual,$Result.Err("Violates inequality"),A3($Triangle.triangleKind,7,3,2)))]));
+   var runner = Elm.Native.Task.make(_elm).performSignal("runner",$Console.run($ElmTest.consoleRunner(tests)));
+   return _elm.Main.values = {_op: _op,tests: tests};
+};

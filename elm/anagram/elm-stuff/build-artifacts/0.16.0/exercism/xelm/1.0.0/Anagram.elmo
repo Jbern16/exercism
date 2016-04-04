@@ -1,0 +1,29 @@
+Elm.Anagram = Elm.Anagram || {};
+Elm.Anagram.make = function (_elm) {
+   "use strict";
+   _elm.Anagram = _elm.Anagram || {};
+   if (_elm.Anagram.values) return _elm.Anagram.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm);
+   var _op = {};
+   var sortWord = function (word) {
+      var lowered = $String.toLower(word);
+      return A3($List.foldr,F2(function (x,y) {    return A2($Basics._op["++"],x,y);}),"",$List.sort(A2($String.split,"",lowered)));
+   };
+   var detect = F2(function (word,list) {
+      var filteredList = A2($List.filter,function (e) {    return !_U.eq($String.toLower(e),word);},list);
+      var sortedWord = sortWord(word);
+      return A2($List.member,$String.toLower(word),A2($List.map,$String.toLower,list)) && _U.eq($List.length(list),1) ? _U.list([]) : A2($List.filter,
+      function (e) {
+         return _U.eq(sortWord(e),sortedWord);
+      },
+      filteredList);
+   });
+   return _elm.Anagram.values = {_op: _op,sortWord: sortWord,detect: detect};
+};

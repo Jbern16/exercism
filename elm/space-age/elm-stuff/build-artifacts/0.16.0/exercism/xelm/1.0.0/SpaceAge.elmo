@@ -1,0 +1,44 @@
+Elm.SpaceAge = Elm.SpaceAge || {};
+Elm.SpaceAge.make = function (_elm) {
+   "use strict";
+   _elm.SpaceAge = _elm.SpaceAge || {};
+   if (_elm.SpaceAge.values) return _elm.SpaceAge.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var ageOn = F2(function (planet,seconds) {
+      var _p0 = planet;
+      switch (_p0.ctor)
+      {case "Earth": return seconds / 31557600;
+         case "Mercury": return seconds / 0.2408467 / 31557600;
+         case "Venus": return seconds / 0.61519726 / 31557600;
+         case "Mars": return seconds / 1.8808158 / 31557600;
+         case "Jupiter": return seconds / 11.862615 / 31557600;
+         case "Saturn": return seconds / 29.447498 / 31557600;
+         case "Uranus": return seconds / 84.016846 / 31557600;
+         default: return seconds / 164.79132 / 31557600;}
+   });
+   var Neptune = {ctor: "Neptune"};
+   var Uranus = {ctor: "Uranus"};
+   var Saturn = {ctor: "Saturn"};
+   var Jupiter = {ctor: "Jupiter"};
+   var Mars = {ctor: "Mars"};
+   var Earth = {ctor: "Earth"};
+   var Venus = {ctor: "Venus"};
+   var Mercury = {ctor: "Mercury"};
+   return _elm.SpaceAge.values = {_op: _op
+                                 ,Mercury: Mercury
+                                 ,Venus: Venus
+                                 ,Earth: Earth
+                                 ,Mars: Mars
+                                 ,Jupiter: Jupiter
+                                 ,Saturn: Saturn
+                                 ,Uranus: Uranus
+                                 ,Neptune: Neptune
+                                 ,ageOn: ageOn};
+};

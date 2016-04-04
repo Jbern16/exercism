@@ -1,0 +1,32 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Accumulate = Elm.Accumulate.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console = Elm.Console.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $ElmTest = Elm.ElmTest.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var square = function (x) {    return x * x;};
+   var tests = A2($ElmTest.suite,
+   "Accumulate",
+   _U.list([A2($ElmTest.test,"[]] Accumulate",A2($ElmTest.assertEqual,_U.list([]),A2($Accumulate.accumulate,square,_U.list([]))))
+           ,A2($ElmTest.test,"square Accumulate",A2($ElmTest.assertEqual,_U.list([1,4,9]),A2($Accumulate.accumulate,square,_U.list([1,2,3]))))
+           ,A2($ElmTest.test,
+           "toUpper Accumulate",
+           A2($ElmTest.assertEqual,_U.list(["HELLO","WORLD"]),A2($Accumulate.accumulate,$String.toUpper,_U.list(["hello","world"]))))
+           ,A2($ElmTest.test,
+           "reverse Accumulate",
+           A2($ElmTest.assertEqual,_U.list(["olleh","dlrow"]),A2($Accumulate.accumulate,$String.reverse,_U.list(["hello","world"]))))]));
+   var runner = Elm.Native.Task.make(_elm).performSignal("runner",$Console.run($ElmTest.consoleRunner(tests)));
+   return _elm.Main.values = {_op: _op,square: square,tests: tests};
+};

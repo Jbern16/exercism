@@ -1,0 +1,29 @@
+Elm.Bob = Elm.Bob || {};
+Elm.Bob.make = function (_elm) {
+   "use strict";
+   _elm.Bob = _elm.Bob || {};
+   if (_elm.Bob.values) return _elm.Bob.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Regex = Elm.Regex.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm);
+   var _op = {};
+   var checkUppers = function (phrase) {    return _U.eq($String.toUpper(phrase),phrase) ? true : false;};
+   var cleanNumbers = function (phrase) {
+      return $String.trim(A4($Regex.replace,$Regex.All,$Regex.regex("[0123456789]"),function (_p0) {    return "";},phrase));
+   };
+   var hey = function (phrase) {
+      var cleanedString = cleanNumbers(phrase);
+      return A2($String.startsWith,",",$String.reverse(cleanedString)) ? "Whatever." : A2($String.endsWith,
+      "?",
+      cleanedString) && _U.eq(checkUppers(cleanedString),false) ? "Sure." : $String.isEmpty(cleanedString) ? "Fine. Be that way!" : A2($String.endsWith,
+      "?",
+      cleanedString) && A2($String.startsWith,"?",cleanedString) ? "Sure." : checkUppers(cleanedString) ? "Whoa, chill out!" : "Whatever.";
+   };
+   return _elm.Bob.values = {_op: _op,cleanNumbers: cleanNumbers,checkUppers: checkUppers,hey: hey};
+};

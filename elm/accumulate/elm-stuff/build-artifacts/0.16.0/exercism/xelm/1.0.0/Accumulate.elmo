@@ -1,0 +1,27 @@
+Elm.Accumulate = Elm.Accumulate || {};
+Elm.Accumulate.make = function (_elm) {
+   "use strict";
+   _elm.Accumulate = _elm.Accumulate || {};
+   if (_elm.Accumulate.values) return _elm.Accumulate.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var accumulate = F2(function ($function,collection) {
+      var _p0 = collection;
+      if (_p0.ctor === "[]") {
+            return _U.list([]);
+         } else {
+            if (_p0._1.ctor === "[]") {
+                  return _U.list([$function(_p0._0)]);
+               } else {
+                  return A2($List._op["::"],$function(_p0._0),A2(accumulate,$function,_p0._1));
+               }
+         }
+   });
+   return _elm.Accumulate.values = {_op: _op,accumulate: accumulate};
+};

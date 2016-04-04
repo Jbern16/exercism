@@ -1,0 +1,29 @@
+Elm.Triangle = Elm.Triangle || {};
+Elm.Triangle.make = function (_elm) {
+   "use strict";
+   _elm.Triangle = _elm.Triangle || {};
+   if (_elm.Triangle.values) return _elm.Triangle.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Set = Elm.Set.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var checkLength = F2(function (set,number) {    return _U.eq($Set.size(set),number);});
+   var checkValid = function (set) {    return A2($List.any,function (a) {    return _U.cmp(a,0) < 0;},$Set.toList(set)) || A2($Set.member,0,set);};
+   var checkInEquality = F3(function (a,b,c) {
+      var max$ = $List.maximum(_U.list([a,b,c]));
+      var sums$ = a + b + c;
+      return _U.cmp(2 * A2($Maybe.withDefault,0,max$),sums$) > -1;
+   });
+   var triangleKind = F3(function (a,b,c) {
+      var uniques = $Set.fromList(_U.list([a,b,c]));
+      return checkValid(uniques) ? $Result.Err("Invalid lengths") : A3(checkInEquality,a,b,c) ? $Result.Err("Violates inequality") : A2(checkLength,
+      uniques,
+      1) ? $Result.Ok("equilateral") : A2(checkLength,uniques,2) ? $Result.Ok("isosceles") : $Result.Ok("scalene");
+   });
+   return _elm.Triangle.values = {_op: _op,checkInEquality: checkInEquality,checkValid: checkValid,checkLength: checkLength,triangleKind: triangleKind};
+};
