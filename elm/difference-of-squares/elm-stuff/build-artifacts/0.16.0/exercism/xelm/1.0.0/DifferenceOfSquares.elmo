@@ -1,0 +1,26 @@
+Elm.DifferenceOfSquares = Elm.DifferenceOfSquares || {};
+Elm.DifferenceOfSquares.make = function (_elm) {
+   "use strict";
+   _elm.DifferenceOfSquares = _elm.DifferenceOfSquares || {};
+   if (_elm.DifferenceOfSquares.values) return _elm.DifferenceOfSquares.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var sumOfSquares = function (num) {
+      var num = num + 1;
+      var getNumbersSquare = A2($Array.initialize,num,function (e) {    return Math.pow(e,2);});
+      return A3($Array.foldr,F2(function (x,y) {    return x + y;}),0,getNumbersSquare);
+   };
+   var squareOfSum = function (num) {
+      var getNumbersSum = A2($Array.initialize,num + 1,$Basics.identity);
+      return Math.pow(A3($Array.foldr,F2(function (x,y) {    return x + y;}),0,getNumbersSum),2);
+   };
+   var difference = function (num) {    return squareOfSum(num) - sumOfSquares(num);};
+   return _elm.DifferenceOfSquares.values = {_op: _op,squareOfSum: squareOfSum,sumOfSquares: sumOfSquares,difference: difference};
+};

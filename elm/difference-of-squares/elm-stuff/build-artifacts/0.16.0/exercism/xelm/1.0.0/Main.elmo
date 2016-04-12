@@ -1,0 +1,38 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console = Elm.Console.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $DifferenceOfSquares = Elm.DifferenceOfSquares.make(_elm),
+   $ElmTest = Elm.ElmTest.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var tests = A2($ElmTest.suite,
+   "DifferenceOfSquares",
+   _U.list([A2($ElmTest.suite,
+           "square the sum of the numbers up to the given number",
+           _U.list([A2($ElmTest.test,"square of sum 5",A2($ElmTest.assertEqual,225,$DifferenceOfSquares.squareOfSum(5)))
+                   ,A2($ElmTest.test,"square of sum 10",A2($ElmTest.assertEqual,3025,$DifferenceOfSquares.squareOfSum(10)))
+                   ,A2($ElmTest.test,"square of sum 100",A2($ElmTest.assertEqual,25502500,$DifferenceOfSquares.squareOfSum(100)))]))
+           ,A2($ElmTest.suite,
+           "sum the squares of the numbers up to the given number",
+           _U.list([A2($ElmTest.test,"sum of squares 5",A2($ElmTest.assertEqual,55,$DifferenceOfSquares.sumOfSquares(5)))
+                   ,A2($ElmTest.test,"sum of squares 10",A2($ElmTest.assertEqual,385,$DifferenceOfSquares.sumOfSquares(10)))
+                   ,A2($ElmTest.test,"sum of squares 100",A2($ElmTest.assertEqual,338350,$DifferenceOfSquares.sumOfSquares(100)))]))
+           ,A2($ElmTest.suite,
+           "subtract sum of squares from square of sums",
+           _U.list([A2($ElmTest.test,"difference of squares 0",A2($ElmTest.assertEqual,0,$DifferenceOfSquares.difference(0)))
+                   ,A2($ElmTest.test,"difference of squares 5",A2($ElmTest.assertEqual,170,$DifferenceOfSquares.difference(5)))
+                   ,A2($ElmTest.test,"difference of squares 10",A2($ElmTest.assertEqual,2640,$DifferenceOfSquares.difference(10)))
+                   ,A2($ElmTest.test,"difference of squares 100",A2($ElmTest.assertEqual,25164150,$DifferenceOfSquares.difference(100)))]))]));
+   var runner = Elm.Native.Task.make(_elm).performSignal("runner",$Console.run($ElmTest.consoleRunner(tests)));
+   return _elm.Main.values = {_op: _op,tests: tests};
+};
