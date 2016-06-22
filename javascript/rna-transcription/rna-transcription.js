@@ -17,11 +17,3 @@ DnaTranscriber.prototype.toRna = function(dna){
 }
 
 module.exports = DnaTranscriber
-
-
-
-
-// * `G` -> `C`
-// * `C` -> `G`
-// * `T` -> `A`
-// * `A` -> `U`
